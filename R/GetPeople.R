@@ -63,15 +63,17 @@ LocateDEDs <- function(distance_matrix, County_DED, radius_meters, max_num=NULL)
 }
 
 
+# other options: "~/GoogleDrive/irelandData/census_ireland_1901"
+ExtractDataByLocation <- function(County_DEDs,
+                                  path_1901 = "data/census_ireland_1901",
+                                  path_1911 = "data/census_ireland_1911"){
 
-ExtractDataByLocation <- function(County_DEDs){
-
-  full_file_paths <- c(list.files("~/GoogleDrive/irelandData/census_ireland_1901",
+  full_file_paths <- c(list.files(path_1901,
                                 pattern = "*.txt",
                                 recursive = TRUE,
                                 full.names = TRUE,
                                 include.dirs = TRUE),
-                       list.files("~/GoogleDrive/irelandData/census_ireland_1911",
+                       list.files(path_1911,
                                   pattern = "*.txt",
                                   recursive = TRUE,
                                   full.names = TRUE,
@@ -79,12 +81,12 @@ ExtractDataByLocation <- function(County_DEDs){
 
     # Extract the DEDs -- district electoral division
 
-  DEDs_to_match_data <- c(list.files("~/GoogleDrive/irelandData/census_ireland_1901",
+  DEDs_to_match_data <- c(list.files(path_1901,
                         pattern = "*.txt",
                         recursive = TRUE,
                         full.names = FALSE,
                         include.dirs = FALSE),
-             list.files("~/GoogleDrive/irelandData/census_ireland_1911",
+             list.files(path_1911,
                         pattern = "*.txt",
                         recursive = TRUE,
                         full.names = FALSE,
@@ -92,12 +94,12 @@ ExtractDataByLocation <- function(County_DEDs){
     stringr::str_extract( "([^/]+$)") %>%
     gsub(".txt", "", .) %>% gsub("_", " ", .)
 
-  counties <- c(list.files("~/GoogleDrive/irelandData/census_ireland_1901",
+  counties <- c(list.files(path_1901,
                            pattern = "*.txt",
                            recursive = TRUE,
                            full.names = TRUE,
                            include.dirs = FALSE),
-                list.files("~/GoogleDrive/irelandData/census_ireland_1911",
+                list.files(path_1911,
                            pattern = "*.txt",
                            recursive = TRUE,
                            full.names = TRUE,
