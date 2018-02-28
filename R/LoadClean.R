@@ -18,7 +18,8 @@
 #' LoadCleanRaw("~/GoogleDrive/irelandData/census_ireland_1901/Carlow/Ticknock.txt", assignID = c("County", "DED", "Year"))
 LoadCleanRaw <- function(path, file_delim = " ", assignID=NULL, preProcess = FALSE){
 
-  dat <- suppressMessages(read_delim(path, delim = file_delim, trim_ws = TRUE, escape_double = FALSE))
+  dat <- suppressWarnings(suppressMessages(read_delim(path, delim = file_delim,
+                                                      trim_ws = TRUE, escape_double = FALSE)))
 
   if(!preProcess){
     # ticknock_kayla has been pre-processed, but the .txt raw files haven't
