@@ -19,7 +19,8 @@
 LoadCleanRaw <- function(path, file_delim = " ", assignID=NULL, preProcess = FALSE){
 
   dat <- suppressWarnings(suppressMessages(read_delim(path, delim = file_delim,
-                                                      trim_ws = TRUE, escape_double = FALSE)))
+                                                      trim_ws = TRUE, escape_double = FALSE))) %>%
+    mutate_all( as.character)
 
   if(!preProcess){
     # ticknock_kayla has been pre-processed, but the .txt raw files haven't
@@ -44,6 +45,8 @@ LoadCleanRaw <- function(path, file_delim = " ", assignID=NULL, preProcess = FAL
 
   dat[dat == "-"] <- NA
   dat$Age <- as.numeric(dat$Age)
+  dat$Year <- as.numeric(dat$Year)
+
   dat$household_year <- paste0(dat$household,"_", dat$Year)
 
 

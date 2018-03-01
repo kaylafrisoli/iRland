@@ -123,11 +123,12 @@ ExtractDataByLocation <- function(County_DEDs,
     #   tbl1[[i]] <- mutate_all(tbl1[[i]], as.character)
     # }
     data_within_radius = tbl1 %>% bind_rows()
+    # rbind.fill was slightly faster so we'll stick to that
+    #data_within_radius = tbl1 %>% rbind.fill()
 
-  } else{
 
+  }else{
     data_within_radius = filter(Pre_Loaded_Data, County_DED %in% County_DEDs)
-
   }
 
   return(data_within_radius)
@@ -136,11 +137,15 @@ ExtractDataByLocation <- function(County_DEDs,
 # want greater than or equal to cutoff
 # if function returns logical true/false then leave cutoff null
 SubsetByFunction <- function(data_to_subset, data_labelee, var, funct,
-                             cutoff=NULL, cutoff_operator=c( "greater.equal", "greater","less.equal", "less")){
+                             cutoff=NULL, cutoff_operator=c( "greater.equal", "greater","less.equal", "less", "between")){
 
   function_output <- sapply(pull(data_to_subset, var), function(x) {
                                   get(funct)(x, pull(data_labelee, var))
                                   })
+  if(length(function_output) == 0){
+    return(data_to_subset)
+  }
+
   if(is.null(cutoff)){
     return(data_to_subset[function_output & !is.na(function_output), ])
   }
@@ -155,6 +160,13 @@ SubsetByFunction <- function(data_to_subset, data_labelee, var, funct,
   }
   if(cutoff_operator == "less"){
     return(data_to_subset[(function_output < cutoff) & !is.na(function_output < cutoff), ])
+  }
+  if(cutoff_operator == "between"){
+    cutoff <- sort(cutoff, decreasing = FALSE)
+    return(data_to_subset[(function_output > cutoff[1]) &
+                            (function_output < cutoff[2]) &
+                            !is.na(function_output > cutoff[1]) &
+                            !is.na(function_output < cutoff[2]), ])
   }
 }
 
