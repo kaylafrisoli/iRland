@@ -16,6 +16,7 @@
 #' LoadCleanRaw("~/GoogleDrive/irelandData/ticknock_kayla.csv", ",", preProcess = TRUE)
 #' LoadCleanRaw("~/GoogleDrive/irelandData/census_ireland_1901/Carlow/Ticknock.txt")
 #' LoadCleanRaw("~/GoogleDrive/irelandData/census_ireland_1901/Carlow/Ticknock.txt", assignID = c("County", "DED", "Year"))
+#' @export
 LoadCleanRaw <- function(path, file_delim = " ", assignID=NULL, preProcess = FALSE){
 
   dat <- suppressWarnings(suppressMessages(read_delim(path, delim = file_delim,
@@ -73,7 +74,7 @@ LoadCleanRaw <- function(path, file_delim = " ", assignID=NULL, preProcess = FAL
 }
 
 
-
+#' @export
 AssignID <- function(dat, variables.for.id){
 
   dat$ourID <- apply(dat[, variables.for.id], 1, paste0, collapse="") %>% paste0(".") %>% paste0(1:nrow(dat))

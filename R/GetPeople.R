@@ -13,6 +13,7 @@
 #'
 #' @examples
 #'
+#' @export
 GetUnlabeledID <- function(path_data=NULL, labelee_data=NULL, path_labels){
   # should we do data instead of path_data?????
   # let's do both
@@ -50,6 +51,7 @@ GetUnlabeledID <- function(path_data=NULL, labelee_data=NULL, path_labels){
 # gsub(" ", "", .) %>% gsub("_$", "", .)
 
 # could do some type of radius or max?
+#' @export
 LocateDEDs <- function(distance_matrix, County_DED, radius_meters, max_num=NULL, min_num=NULL){
   x <- distance_matrix[order(distance_matrix[, County_DED]), County_DED, drop=FALSE]
   County_DED_within <- rownames(x)[x <= radius_meters]
@@ -70,6 +72,7 @@ LocateDEDs <- function(distance_matrix, County_DED, radius_meters, max_num=NULL,
 
 
 # other options: "~/GoogleDrive/irelandData/census_ireland_1901"
+#' @export
 ExtractDataByLocation <- function(County_DEDs,
                                   path_1901 = "data/census_ireland_1901",
                                   path_1911 = "data/census_ireland_1911",
@@ -142,6 +145,7 @@ ExtractDataByLocation <- function(County_DEDs,
 
 # want greater than or equal to cutoff
 # if function returns logical true/false then leave cutoff null
+#' @export
 SubsetByFunction <- function(data_to_subset, data_labelee, var, funct,
                              cutoff=NULL, cutoff_operator=c( "greater.equal", "greater","less.equal", "less", "between")){
 
@@ -179,6 +183,7 @@ SubsetByFunction <- function(data_to_subset, data_labelee, var, funct,
 
 # data_household is the data where we know we can find
 # the household of the candidate
+#' @export
 GetHousehold <- function(data_candidate, data_household=NULL){
 
   if(is.null(data_household)){
