@@ -50,9 +50,15 @@ GetUnlabeledID <- function(path_data=NULL, labelee_data=NULL, path_labels){
 # gsub(" ", "", .) %>% gsub("_$", "", .)
 
 # could do some type of radius or max?
-LocateDEDs <- function(distance_matrix, County_DED, radius_meters, max_num=NULL){
+LocateDEDs <- function(distance_matrix, County_DED, radius_meters, max_num=NULL, min_num=NULL){
   x <- distance_matrix[order(distance_matrix[, County_DED]), County_DED, drop=FALSE]
   County_DED_within <- rownames(x)[x <= radius_meters]
+
+  if(!is.null(min_num)){
+    if(length(County_DED_within) < min_num){
+      County_DED_within <- rownames(x)[1:min_num]
+    }
+  }
 
   if(!is.null(max_num)){
     if(length(County_DED_within) > max_num){
