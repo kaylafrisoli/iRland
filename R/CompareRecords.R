@@ -1,4 +1,4 @@
-
+#' @export
 MakeComparisons <- function(RLdata,
                          comparisons,
                          unique.ids1=NULL,
@@ -84,7 +84,7 @@ MakeComparisons <- function(RLdata,
     return(comparison.data)
   }
 
-
+#' @export
 RemoveDedups <- function(records,
                          list.variable,
                          verbose = FALSE,
