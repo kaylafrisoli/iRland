@@ -70,7 +70,21 @@ LoadCleanRaw <- function(path, file_delim = " ", assignID=NULL, preProcess = FAL
     dat$ourID <- apply(dat[, assignID], 1, paste0, collapse="") %>% paste0(".") %>% paste0(1:nrow(dat))
   }
 
-  return(dat)
+  names_all <- c("Year", "County",     "DED",  "TownStreet", "Number",     "ID",  "Surname",
+                "Forename",   "Age",   "Sex",   "RelationHead",   "Religion",   "Birthplace", "Occupation",
+                "Literacy",   "IrishLang",  "MaritalStat", "SpecIlliness",   "YearsMarr",  "ChildBorn",  "ChildLiv",
+                "locations",  "household",  "housename",  "household_year", "County_DED", "ourID")
+
+  missing_names <- which(!(names_all %in% names(dat)))
+
+  if(length(missing_names) == 0){
+    return(dat)
+
+  } else{
+    dat[names_all[missing_names]] <- NA
+    return(dat)
+  }
+
 }
 
 
