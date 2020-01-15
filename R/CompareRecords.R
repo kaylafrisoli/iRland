@@ -60,12 +60,17 @@ MakeComparisons <- function(RLdata,
         my.combs <- apply(comparison.data[, c("min.id", "max.id")],
                           2, function(x) as.character(RLdata[, variables.to.match[i]][x]))
         if(verbose) print(head(my.combs))
+        if(nrow(comparison.data) == 1){
+          comparison.data[, comparison.names[i]] <- get(string.comparators[i])(my.combs[ 1],
+                                                                              my.combs[ 2])
+        } else {
         pasted.combo.values <- paste0(my.combs[, 1], ".", my.combs[, 2])
         if(verbose) print(head(pasted.combo.values))
         unique.ones <- which(!duplicated(pasted.combo.values))
         unique.comparisons <- get(string.comparators[i])(my.combs[unique.ones, 1], my.combs[unique.ones, 2])
         mapping      <- match(pasted.combo.values, pasted.combo.values[unique.ones])
         comparison.data[comparison.names[i]] <- unique.comparisons[mapping]
+        }
       }
     }
 
@@ -89,6 +94,61 @@ RemoveDedups <- function(records,
                          list.variable,
                          verbose = FALSE,
                          write.blocks = FALSE) {
+  # changed from records$Year to pull
+  # x <- expand.grid(min.id = which(records$Year == 1901),
+  #                  max.id = which(records$Year == 1911))
+
+
+  # if records was read in using read_csv (i.e. is a tibble)
+  # then we extract variables different than data frames
+  if(is.tibble(records)){
+    x <- expand.grid(min.id = which(pull(records, list.variable) == 1901),
+                     max.id = which(pull(records, list.variable) == 1911))
+    x$min.id <- as.numeric(as.character(x$min.id))
+    x$max.id <- as.numeric(as.character(x$max.id))
+    x$blockid <- paste0(pull(records, list.variable)[apply(x[1:2], 1, min)],
+                        "_",
+                        pull(records, list.variable)[apply(x[1:2], 1, max)])
+  } else{
+    # kayla added comma before list.variables on 7/24 at 5 pm
+    x <- expand.grid(min.id = which(records[, list.variable] == 1901),
+                     max.id = which(records[, list.variable] == 1911))
+    x$min.id <- as.numeric(as.character(x$min.id))
+    x$max.id <- as.numeric(as.character(x$max.id))
+    x$blockid <- paste0(records[, list.variable][apply(x[1:2], 1, min)],
+                        "_",
+                        records[, list.variable][apply(x[1:2], 1, max)])
+  }
+
+
+  pairs.to.compare <- data.frame(
+    min.id = apply(x[1:2], 1, min),
+    max.id = apply(x[1:2], 1, max),
+    blockid = x$blockid
+    # passid = "NA"
+  )
+
+
+
+  if (verbose)
+    print("done with new.combs")
+
+  if (write.blocks) {
+    write.csv(pairs.to.compare, "pastepassall.csv")
+  }
+  return(pairs.to.compare)
+}
+
+
+
+#' @export
+RemoveDedupsBlock <- function(records,
+                         block.variables, # don't include year
+                         verbose = FALSE,
+                         write.blocks = FALSE) {
+
+  block_groups <- apply(records[, block.variables], 1,
+                        paste0, collapse = TRUE)
 
   x <- expand.grid(min.id = which(records$Year == 1901),
                    max.id = which(records$Year == 1911))
@@ -126,5 +186,3 @@ RemoveDedups <- function(records,
   }
   return(pairs.to.compare)
 }
-
-

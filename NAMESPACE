@@ -2,10 +2,12 @@
 
 export(AssignID)
 export(ExtractDataByLocation)
+export(ExtractDataByLocationYear)
 export(GetHousehold)
 export(GetUnlabeledID)
 export(LoadCleanRaw)
 export(LocateDEDs)
 export(MakeComparisons)
 export(RemoveDedups)
+export(RemoveDedupsBlock)
 export(SubsetByFunction)

@@ -125,7 +125,78 @@ ExtractDataByLocation <- function(County_DEDs,
                                 gsub(" ", "_", .))    %>%
       gsub(" ", "", .) %>% gsub("_$", "", .)
 
-    which_files <- which(all_county_deds %in% County_DEDs)
+    # 10/8/18 fix some of the grepl issues with county names etc.
+
+    if("Kildare.Athy_East" %in% County_DEDs){
+      County_DEDs <- c(County_DEDs, "Kildare.Athy_East_Urban")
+    }
+    # which_files <- which(all_county_deds %in% County_DEDs)
+    which_files <- which(str_replace_all(all_county_deds, "[^[:alnum:]]", "") %in%
+                           str_replace_all(County_DEDs, "[^[:alnum:]]", ""))
+
+    tbl1 = lapply(full_file_paths[which_files], LoadCleanRaw, assignID = c("County", "DED", "Year"))
+    # for(i in 1:length(tbl1)){
+    #   tbl1[[i]] <- mutate_all(tbl1[[i]], as.character)
+    # }
+    data_within_radius = tbl1 %>% bind_rows()
+    # rbind.fill was slightly faster so we'll stick to that
+    #data_within_radius = tbl1 %>% rbind.fill()
+
+
+  }else{
+    data_within_radius = filter(Pre_Loaded_Data, County_DED %in% County_DEDs)
+  }
+
+  return(data_within_radius)
+}
+
+
+# other options: "~/GoogleDrive/irelandData/census_ireland_1901"
+#' @export
+ExtractDataByLocationYear <- function(County_DEDs,
+                                      path = "data/census_ireland_1901",
+                                      Pre_Loaded_Data = NULL){
+
+  if(is.null(Pre_Loaded_Data)){
+
+    full_file_paths <- c(list.files(path,
+                                    pattern = "*.txt",
+                                    recursive = TRUE,
+                                    full.names = TRUE,
+                                    include.dirs = TRUE))
+
+    # Extract the DEDs -- district electoral division
+
+    DEDs_to_match_data <- c(list.files(path,
+                                       pattern = "*.txt",
+                                       recursive = TRUE,
+                                       full.names = FALSE,
+                                       include.dirs = FALSE)) %>%
+      stringr::str_extract( "([^/]+$)") %>%
+      gsub(".txt", "", .) %>% gsub("_", " ", .)
+
+    counties <- c(list.files(path,
+                             pattern = "*.txt",
+                             recursive = TRUE,
+                             full.names = TRUE,
+                             include.dirs = FALSE)) %>%
+      gsub("([^/]+$)", "", .) %>%
+      gsub("/$", "", .) %>%
+      stringr::str_extract( "([^/]+$)")
+
+    all_county_deds <- paste0(counties, ".", DEDs_to_match_data %>%
+                                gsub("  ", " ", .) %>%
+                                gsub(" ", "_", .))    %>%
+      gsub(" ", "", .) %>% gsub("_$", "", .)
+
+    # 10/8/18 fix some of the grepl issues with county names etc.
+
+    if("Kildare.Athy_East" %in% County_DEDs){
+      County_DEDs <- c(County_DEDs, "Kildare.Athy_East_Urban")
+    }
+    # which_files <- which(all_county_deds %in% County_DEDs)
+    which_files <- which(str_replace_all(all_county_deds, "[^[:alnum:]]", "") %in%
+                           str_replace_all(County_DEDs, "[^[:alnum:]]", ""))
 
     tbl1 = lapply(full_file_paths[which_files], LoadCleanRaw, assignID = c("County", "DED", "Year"))
     # for(i in 1:length(tbl1)){
