@@ -52,20 +52,20 @@ MakeComparisons <- function(RLdata,
 
         household.combs <- apply(comparison.data[, c("min.id", "max.id")],
                                  2, function(x) as.character(RLdata[, "household_year"][x]))
-        if(verbose) print(head(household.combs))
+        if(verbose) print(utils::head(household.combs))
         household.name.combs2 <- apply(household.combs, 1, GetHouseholdNames_Compare, comparison_fct =  string.comparators[i])
         comparison.data[comparison.names[i]] <- household.name.combs2
 
       } else{
         my.combs <- apply(comparison.data[, c("min.id", "max.id")],
                           2, function(x) as.character(RLdata[, variables.to.match[i]][x]))
-        if(verbose) print(head(my.combs))
+        if(verbose) print(utils::head(my.combs))
         if(nrow(comparison.data) == 1){
           comparison.data[, comparison.names[i]] <- get(string.comparators[i])(my.combs[ 1],
                                                                               my.combs[ 2])
         } else {
         pasted.combo.values <- paste0(my.combs[, 1], ".", my.combs[, 2])
-        if(verbose) print(head(pasted.combo.values))
+        if(verbose) print(utils::head(pasted.combo.values))
         unique.ones <- which(!duplicated(pasted.combo.values))
         unique.comparisons <- get(string.comparators[i])(my.combs[unique.ones, 1], my.combs[unique.ones, 2])
         mapping      <- match(pasted.combo.values, pasted.combo.values[unique.ones])
@@ -134,7 +134,7 @@ RemoveDedups <- function(records,
     print("done with new.combs")
 
   if (write.blocks) {
-    write.csv(pairs.to.compare, "pastepassall.csv")
+    utils::write.csv(pairs.to.compare, "pastepassall.csv")
   }
   return(pairs.to.compare)
 }
@@ -182,7 +182,7 @@ RemoveDedupsBlock <- function(records,
     print("done with new.combs")
 
   if (write.blocks) {
-    write.csv(pairs.to.compare, "pastepassall.csv")
+    utils::write.csv(pairs.to.compare, "pastepassall.csv")
   }
   return(pairs.to.compare)
 }
