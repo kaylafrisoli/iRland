@@ -26,3 +26,12 @@ AbsoluteDifference <- function(vec1, vec2){
   ab.dif <- as.numeric(abs(as.numeric(vec1)-as.numeric(vec2)))
   return(ab.dif)
 }
+
+
+GetPairwiseMatchesFromIDs <- function(combinations.of.original.data,
+                                      ids.from.original.data){
+  ids.from.original.data <- as.vector(ids.from.original.data)
+  1 * (ids.from.original.data[combinations.of.original.data[, 1]] ==
+         ids.from.original.data[combinations.of.original.data[, 2]])
+}
+
