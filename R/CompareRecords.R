@@ -14,7 +14,7 @@ MakeComparisons <- function(RLdata,
   }
   # set the default string.comparator to jarowinkler for each column
   if(is.null(string.comparators)){
-    string.comparators <- rep("jarowinkler", cols)
+    string.comparators <- rep("jarowinkler", length(variables.to.match)) # replacing cols with length(variables.to.match)
   } else{
     string.comparators <- string.comparators
   }
