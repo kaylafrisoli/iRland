@@ -102,13 +102,13 @@ RemoveDedups <- function(records,
   # if records was read in using read_csv (i.e. is a tibble)
   # then we extract variables different than data frames
   if(is.tibble(records)){
-    x <- expand.grid(min.id = which(pull(records, list.variable) == 1901),
-                     max.id = which(pull(records, list.variable) == 1911))
+    x <- expand.grid(min.id = which(dplyr::pull(records, list.variable) == 1901),
+                     max.id = which(dplyr::pull(records, list.variable) == 1911))
     x$min.id <- as.numeric(as.character(x$min.id))
     x$max.id <- as.numeric(as.character(x$max.id))
-    x$blockid <- paste0(pull(records, list.variable)[apply(x[1:2], 1, min)],
+    x$blockid <- paste0(dplyr::pull(records, list.variable)[apply(x[1:2], 1, min)],
                         "_",
-                        pull(records, list.variable)[apply(x[1:2], 1, max)])
+                        dplyr::pull(records, list.variable)[apply(x[1:2], 1, max)])
   } else{
     # kayla added comma before list.variables on 7/24 at 5 pm
     x <- expand.grid(min.id = which(records[, list.variable] == 1901),
@@ -159,9 +159,9 @@ RemoveDedupsBlock <- function(records,
   # if records was read in using read_csv (i.e. is a tibble)
   # then we extract variables different than data frames
   if(is.tibble(records)){
-    x$blockid <- paste0(pull(records, list.variable)[apply(x[1:2], 1, min)],
+    x$blockid <- paste0(dplyr::pull(records, list.variable)[apply(x[1:2], 1, min)],
                         "_",
-                        pull(records, list.variable)[apply(x[1:2], 1, max)])
+                        dplyr::pull(records, list.variable)[apply(x[1:2], 1, max)])
   } else{
     x$blockid <- paste0(records[list.variable][apply(x[1:2], 1, min)],
                         "_",

@@ -10,14 +10,14 @@ ExactNonMatch <- function(vec1, vec2){
 
 
 ExactSoundex <- function(vec1, vec2){
-  
-  return(ExactMatch(soundex(vec1), soundex(vec2)))
+
+  return(ExactMatch(RecordLinkage::soundex(vec1), RecordLinkage::soundex(vec2)))
 }
 
 
-f1 <- 
+f1 <-
   SortPaste <- function(vec1, vec2){
-    
+
     return(apply(cbind(vec1, vec2), 1, function(x) return(paste0(sort(x), collapse = ""))))
     #return(paste0(sort(c(vec1, vec2)), collapse = ""))
   }

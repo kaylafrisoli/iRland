@@ -19,9 +19,9 @@
 #' @export
 LoadCleanRaw <- function(path, file_delim = " ", assignID=NULL, preProcess = FALSE){
 
-  dat <- suppressWarnings(suppressMessages(read_delim(path, delim = file_delim,
+  dat <- suppressWarnings(suppressMessages(readr::read_delim(path, delim = file_delim,
                                                       trim_ws = TRUE, escape_double = FALSE))) %>%
-    mutate_all( as.character)
+    dplyr::mutate_all(as.character)
 
   if(!preProcess){
     # ticknock_kayla has been pre-processed, but the .txt raw files haven't

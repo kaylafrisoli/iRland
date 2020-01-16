@@ -37,9 +37,9 @@ GetUnlabeledID <- function(path_data=NULL, labelee_data=NULL, path_labels){
 
   dat_labels <- suppressMessages(readr::read_csv(path_labels))
 
-  unlabeledRecs <- which(!(pull(dat_to_label, "ourID") %in% dat_labels["ourID"]))
+  unlabeledRecs <- which(!(dplyr::pull(dat_to_label, "ourID") %in% dat_labels["ourID"]))
   if(length(unlabeledRecs) == 0) stop("all data in path_data or labelee_data have already been labeled")
-  unlabeledID <- sample(pull(dat_to_label, "ourID")[unlabeledRecs], 1)
+  unlabeledID <- sample(dplyr::pull(dat_to_label, "ourID")[unlabeledRecs], 1)
   return(unlabeledID)
 }
 
@@ -138,13 +138,13 @@ ExtractDataByLocation <- function(County_DEDs,
     # for(i in 1:length(tbl1)){
     #   tbl1[[i]] <- mutate_all(tbl1[[i]], as.character)
     # }
-    data_within_radius = tbl1 %>% bind_rows()
+    data_within_radius = tbl1 %>% dplyr::bind_rows()
     # rbind.fill was slightly faster so we'll stick to that
     #data_within_radius = tbl1 %>% rbind.fill()
 
 
   }else{
-    data_within_radius = filter(Pre_Loaded_Data, County_DED %in% County_DEDs)
+    data_within_radius = dplyr::filter(Pre_Loaded_Data, County_DED %in% County_DEDs)
   }
 
   return(data_within_radius)
@@ -202,13 +202,13 @@ ExtractDataByLocationYear <- function(County_DEDs,
     # for(i in 1:length(tbl1)){
     #   tbl1[[i]] <- mutate_all(tbl1[[i]], as.character)
     # }
-    data_within_radius = tbl1 %>% bind_rows()
+    data_within_radius = tbl1 %>% dplyr::bind_rows()
     # rbind.fill was slightly faster so we'll stick to that
     #data_within_radius = tbl1 %>% rbind.fill()
 
 
   }else{
-    data_within_radius = filter(Pre_Loaded_Data, County_DED %in% County_DEDs)
+    data_within_radius = dplyr::filter(Pre_Loaded_Data, County_DED %in% County_DEDs)
   }
 
   return(data_within_radius)
@@ -220,8 +220,8 @@ ExtractDataByLocationYear <- function(County_DEDs,
 SubsetByFunction <- function(data_to_subset, data_labelee, var, funct,
                              cutoff=NULL, cutoff_operator=c( "greater.equal", "greater","less.equal", "less", "between")){
 
-  function_output <- sapply(pull(data_to_subset, var), function(x) {
-                                  get(funct)(x, pull(data_labelee, var))
+  function_output <- sapply(dplyr::pull(data_to_subset, var), function(x) {
+                                  get(funct)(x, dplyr::pull(data_labelee, var))
                                   })
   if(length(function_output) == 0){
     return(data_to_subset)
@@ -258,11 +258,11 @@ SubsetByFunction <- function(data_to_subset, data_labelee, var, funct,
 GetHousehold <- function(data_candidate, data_household=NULL){
 
   if(is.null(data_household)){
-    data_household <- pull(data_candidate, "County_DED") %>% ExtractDataByLocation()
+    data_household <- dplyr::pull(data_candidate, "County_DED") %>% ExtractDataByLocation()
   }
 
   household <- data_household %>%
-    filter(household_year == pull(data_candidate, "household_year"))
+    dplyr::filter(household_year == dplyr::pull(data_candidate, "household_year"))
 
   return(household)
 
