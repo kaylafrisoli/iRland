@@ -15,12 +15,15 @@
 #' @examples
 #' LoadCleanRaw("~/GoogleDrive/irelandData/ticknock_kayla.csv", ",", preProcess = TRUE)
 #' LoadCleanRaw("~/GoogleDrive/irelandData/census_ireland_1901/Carlow/Ticknock.txt")
-#' LoadCleanRaw("~/GoogleDrive/irelandData/census_ireland_1901/Carlow/Ticknock.txt", assignID = c("County", "DED", "Year"))
+#' LoadCleanRaw("~/GoogleDrive/irelandData/census_ireland_1901/Carlow/Ticknock.txt",
+#'  assignID = c("County", "DED", "Year"))
 #' @export
 LoadCleanRaw <- function(path, file_delim = " ", assignID=NULL, preProcess = FALSE){
 
-  dat <- suppressWarnings(suppressMessages(readr::read_delim(path, delim = file_delim,
-                                                      trim_ws = TRUE, escape_double = FALSE))) %>%
+  dat <- suppressWarnings(suppressMessages(readr::read_delim(path,
+                                                             delim = file_delim,
+                                                      trim_ws = TRUE,
+                                                      escape_double = FALSE))) %>%
     dplyr::mutate_all(as.character)
 
   if(!preProcess){
@@ -51,10 +54,13 @@ LoadCleanRaw <- function(path, file_delim = " ", assignID=NULL, preProcess = FAL
   dat$household_year <- paste0(dat$household,"_", dat$Year)
 
 
-  dat$Literacy[dat$Literacy %in% c("Read write", "Can read and write", "Read and rite",
-                                   "Can read write", "R w", "R and write", "Read with" )] <- "Read and write"
+  dat$Literacy[dat$Literacy %in% c("Read write", "Can read and write",
+                                   "Read and rite", "Can read write",
+                                   "R w", "R and write",
+                                   "Read with" )] <- "Read and write"
 
-  dat$Literacy[dat$Literacy %in% c("Cannot r and w", "Not read write")] <- "Cannot read or write"
+  dat$Literacy[dat$Literacy %in% c("Cannot r and w",
+                                   "Not read write")] <- "Cannot read or write"
 
   dat$Literacy[dat$Literacy %in% c("Can read only" , "Read only")] <- "Read"
 
@@ -70,10 +76,14 @@ LoadCleanRaw <- function(path, file_delim = " ", assignID=NULL, preProcess = FAL
     dat$ourID <- apply(dat[, assignID], 1, paste0, collapse="") %>% paste0(".") %>% paste0(1:nrow(dat))
   }
 
-  names_all <- c("Year", "County",     "DED",  "TownStreet", "Number",     "ID",  "Surname",
-                "Forename",   "Age",   "Sex",   "RelationHead",   "Religion",   "Birthplace", "Occupation",
-                "Literacy",   "IrishLang",  "MaritalStat", "SpecIlliness",   "YearsMarr",  "ChildBorn",  "ChildLiv",
-                "locations",  "household",  "housename",  "household_year", "County_DED", "ourID")
+  names_all <- c("Year", "County",     "DED",  "TownStreet", "Number",     "ID",
+                 "Surname",
+                "Forename",   "Age",   "Sex",   "RelationHead",   "Religion",
+                "Birthplace", "Occupation",
+                "Literacy",   "IrishLang",  "MaritalStat", "SpecIlliness",
+                "YearsMarr",  "ChildBorn",  "ChildLiv",
+                "locations",  "household",  "housename",  "household_year", "
+                County_DED", "ourID")
 
   missing_names <- which(!(names_all %in% names(dat)))
 
@@ -91,7 +101,9 @@ LoadCleanRaw <- function(path, file_delim = " ", assignID=NULL, preProcess = FAL
 #' @export
 AssignID <- function(dat, variables.for.id){
 
-  dat$ourID <- apply(dat[, variables.for.id], 1, paste0, collapse="") %>% paste0(".") %>% paste0(1:nrow(dat))
+  dat$ourID <- apply(dat[, variables.for.id], 1, paste0, collapse="") %>%
+    paste0(".") %>%
+    paste0(1:nrow(dat))
 
   return(dat)
 }

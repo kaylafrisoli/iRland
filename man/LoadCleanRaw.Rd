@@ -24,5 +24,6 @@ Consistently load and standardize raw Irish census data
 \examples{
 LoadCleanRaw("~/GoogleDrive/irelandData/ticknock_kayla.csv", ",", preProcess = TRUE)
 LoadCleanRaw("~/GoogleDrive/irelandData/census_ireland_1901/Carlow/Ticknock.txt")
-LoadCleanRaw("~/GoogleDrive/irelandData/census_ireland_1901/Carlow/Ticknock.txt", assignID = c("County", "DED", "Year"))
+LoadCleanRaw("~/GoogleDrive/irelandData/census_ireland_1901/Carlow/Ticknock.txt",
+ assignID = c("County", "DED", "Year"))
 }
