@@ -68,12 +68,17 @@ LoadCleanRaw <- function(path, file_delim = " ", assignID=NULL, preProcess = FAL
 
   dat$MaritalStat[is.na(dat$MaritalStat)] <- ""
 
-  dat$County_DED <- paste0(dat$County, ".", dat$DED %>%
-                             gsub("  ", " ", .) %>% gsub(" ", "_", .)) %>%
-    gsub(" ", "", .) %>% gsub("_$", "", .)
+  dat$County_DED <- paste0(dat$County, ".",
+                           dat$DED %>%
+                             gsub(pattern="  ", replacement=" ") %>%
+                             gsub(pattern=" ", replacement="_")) %>%
+    gsub(pattern=" ", replacement="") %>%
+    gsub(pattern="_$", replacement="")
 
   if(!is.null(assignID)){
-    dat$ourID <- apply(dat[, assignID], 1, paste0, collapse="") %>% paste0(".") %>% paste0(1:nrow(dat))
+    dat$ourID <- apply(dat[, assignID], 1, paste0, collapse="") %>%
+      paste0(".") %>%
+      paste0(1:nrow(dat))
   }
 
   names_all <- c("Year", "County",     "DED",  "TownStreet", "Number",     "ID",

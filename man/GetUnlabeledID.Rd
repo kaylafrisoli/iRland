@@ -9,6 +9,8 @@ GetUnlabeledID(path_data = NULL, labelee_data = NULL, path_labels)
 \arguments{
 \item{path_data}{path to data we want to label}
 
+\item{labelee_data}{the data we want to label, need either this or path_data}
+
 \item{path_labels}{path to file where we track previously labeled data}
 }
 \value{
@@ -16,7 +18,4 @@ ourID the ID of an unlabeled entity
 }
 \description{
 Find someone or something that has not been previously labeled
-}
-\examples{
-
 }

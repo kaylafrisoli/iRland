@@ -7,11 +7,11 @@
 #'
 #' @param path_data path to data we want to label
 #'
+#' @param labelee_data the data we want to label, need either this or path_data
+#'
 #' @param path_labels path to file where we track previously labeled data
 #'
 #' @return ourID the ID of an unlabeled entity
-#'
-#' @examples
 #'
 #' @export
 GetUnlabeledID <- function(path_data=NULL, labelee_data=NULL, path_labels){
@@ -104,7 +104,8 @@ ExtractDataByLocation <- function(County_DEDs,
                                        full.names = FALSE,
                                        include.dirs = FALSE)) %>%
       stringr::str_extract( "([^/]+$)") %>%
-      gsub(".txt", "", .) %>% gsub("_", " ", .)
+      gsub(pattern=".txt", replacement="") %>%
+      gsub(pattern="_", replacement=" ")
 
     counties <- c(list.files(path_1901,
                              pattern = "*.txt",
@@ -116,14 +117,15 @@ ExtractDataByLocation <- function(County_DEDs,
                              recursive = TRUE,
                              full.names = TRUE,
                              include.dirs = FALSE)) %>%
-      gsub("([^/]+$)", "", .) %>%
-      gsub("/$", "", .) %>%
+      gsub(pattern="([^/]+$)", replacement="") %>%
+      gsub(pattern="/$", replacement="") %>%
       stringr::str_extract( "([^/]+$)")
 
     all_county_deds <- paste0(counties, ".", DEDs_to_match_data %>%
-                                gsub("  ", " ", .) %>%
-                                gsub(" ", "_", .))    %>%
-      gsub(" ", "", .) %>% gsub("_$", "", .)
+                                gsub(pattern="  ", replacement=" ") %>%
+                                gsub(pattern=" ", replacement="_")) %>%
+      gsub(pattern=" ", replacement="") %>%
+      gsub(pattern="_$", replacement="")
 
     # 10/8/18 fix some of the grepl issues with county names etc.
 
@@ -173,21 +175,23 @@ ExtractDataByLocationYear <- function(County_DEDs,
                                        full.names = FALSE,
                                        include.dirs = FALSE)) %>%
       stringr::str_extract( "([^/]+$)") %>%
-      gsub(".txt", "", .) %>% gsub("_", " ", .)
+      gsub(pattern=".txt", replacement="") %>%
+      gsub(pattern="_", replacement=" ")
 
     counties <- c(list.files(path,
                              pattern = "*.txt",
                              recursive = TRUE,
                              full.names = TRUE,
                              include.dirs = FALSE)) %>%
-      gsub("([^/]+$)", "", .) %>%
-      gsub("/$", "", .) %>%
+      gsub(pattern="([^/]+$)", replacement="") %>%
+      gsub(pattern="/$", replacement="") %>%
       stringr::str_extract( "([^/]+$)")
 
     all_county_deds <- paste0(counties, ".", DEDs_to_match_data %>%
-                                gsub("  ", " ", .) %>%
-                                gsub(" ", "_", .))    %>%
-      gsub(" ", "", .) %>% gsub("_$", "", .)
+                                gsub(pattern="  ", replacement=" ") %>%
+                                gsub(pattern=" ", replacement="_")) %>%
+      gsub(pattern=" ", replacement="") %>%
+      gsub(pattern="_$", replacement="")
 
     # 10/8/18 fix some of the grepl issues with county names etc.
 
@@ -208,7 +212,8 @@ ExtractDataByLocationYear <- function(County_DEDs,
 
 
   }else{
-    data_within_radius = dplyr::filter(Pre_Loaded_Data, County_DED %in% County_DEDs)
+    data_within_radius = dplyr::filter(Pre_Loaded_Data,
+                                       County_DED %in% County_DEDs)
   }
 
   return(data_within_radius)
