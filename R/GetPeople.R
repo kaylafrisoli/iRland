@@ -35,7 +35,7 @@ GetUnlabeledID <- function(path_data=NULL, labelee_data=NULL, path_labels){
     dat_to_label <- labelee_data
   }
 
-  dat_labels <- suppressMessages(read_csv(path_labels))
+  dat_labels <- suppressMessages(readr::read_csv(path_labels))
 
   unlabeledRecs <- which(!(pull(dat_to_label, "ourID") %in% dat_labels["ourID"]))
   if(length(unlabeledRecs) == 0) stop("all data in path_data or labelee_data have already been labeled")
