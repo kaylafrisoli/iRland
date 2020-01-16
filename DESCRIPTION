@@ -11,5 +11,6 @@ Imports: readr,
     tibble,
     dplyr,
     DT,
-    RecordLinkage
-RoxygenNote: 6.1.1
+    RecordLinkage,
+    stringr
+RoxygenNote: 7.0.2

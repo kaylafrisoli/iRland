@@ -4,8 +4,7 @@
 \alias{LoadCleanRaw}
 \title{Consistently load raw Irish census data}
 \usage{
-LoadCleanRaw(path, file_delim = " ", assignID = NULL,
-  preProcess = FALSE)
+LoadCleanRaw(path, file_delim = " ", assignID = NULL, preProcess = FALSE)
 }
 \arguments{
 \item{path}{path to data}
