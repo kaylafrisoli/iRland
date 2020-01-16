@@ -101,7 +101,7 @@ RemoveDedups <- function(records,
 
   # if records was read in using read_csv (i.e. is a tibble)
   # then we extract variables different than data frames
-  if(is.tibble(records)){
+  if(tibble::is_tibble(records)){
     x <- expand.grid(min.id = which(dplyr::pull(records, list.variable) == 1901),
                      max.id = which(dplyr::pull(records, list.variable) == 1911))
     x$min.id <- as.numeric(as.character(x$min.id))
@@ -158,7 +158,7 @@ RemoveDedupsBlock <- function(records,
 
   # if records was read in using read_csv (i.e. is a tibble)
   # then we extract variables different than data frames
-  if(is.tibble(records)){
+  if(tibble::is_tibble(records)){
     x$blockid <- paste0(dplyr::pull(records, list.variable)[apply(x[1:2], 1, min)],
                         "_",
                         dplyr::pull(records, list.variable)[apply(x[1:2], 1, max)])
