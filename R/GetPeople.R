@@ -72,6 +72,8 @@ LocateDEDs <- function(distance_matrix, County_DED, radius_meters, max_num=NULL,
 
 
 # other options: "~/GoogleDrive/irelandData/census_ireland_1901"
+#' @importFrom rlang .data
+#'
 #' @export
 ExtractDataByLocation <- function(County_DEDs,
                                   path_1901 = "data/census_ireland_1901",
@@ -146,7 +148,8 @@ ExtractDataByLocation <- function(County_DEDs,
 
 
   }else{
-    data_within_radius = dplyr::filter(Pre_Loaded_Data, County_DED %in% County_DEDs)
+    data_within_radius = dplyr::filter(Pre_Loaded_Data,
+                                       .data$County_DED %in% County_DEDs)
   }
 
   return(data_within_radius)
@@ -154,6 +157,8 @@ ExtractDataByLocation <- function(County_DEDs,
 
 
 # other options: "~/GoogleDrive/irelandData/census_ireland_1901"
+#' @importFrom rlang .data
+#'
 #' @export
 ExtractDataByLocationYear <- function(County_DEDs,
                                       path = "data/census_ireland_1901",
@@ -213,7 +218,7 @@ ExtractDataByLocationYear <- function(County_DEDs,
 
   }else{
     data_within_radius = dplyr::filter(Pre_Loaded_Data,
-                                       County_DED %in% County_DEDs)
+                                       .data$County_DED %in% County_DEDs)
   }
 
   return(data_within_radius)
@@ -263,7 +268,8 @@ SubsetByFunction <- function(data_to_subset, data_labelee, var, funct,
 GetHousehold <- function(data_candidate, data_household=NULL){
 
   if(is.null(data_household)){
-    data_household <- dplyr::pull(data_candidate, "County_DED") %>% ExtractDataByLocation()
+    data_household <- dplyr::pull(data_candidate, "County_DED") %>%
+      ExtractDataByLocation()
   }
 
   household <- data_household %>%

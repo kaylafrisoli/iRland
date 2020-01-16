@@ -14,5 +14,6 @@ Imports:
     DT,
     RecordLinkage,
     stringr,
-    magrittr
+    magrittr,
+    rlang
 RoxygenNote: 7.0.2

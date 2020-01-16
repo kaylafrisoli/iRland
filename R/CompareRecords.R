@@ -53,7 +53,10 @@ MakeComparisons <- function(RLdata,
         household.combs <- apply(comparison.data[, c("min.id", "max.id")],
                                  2, function(x) as.character(RLdata[, "household_year"][x]))
         if(verbose) print(utils::head(household.combs))
-        household.name.combs2 <- apply(household.combs, 1, GetHouseholdNames_Compare, comparison_fct =  string.comparators[i])
+        household.name.combs2 <- apply(household.combs,
+                                       1,
+                                       GetHouseholdNames_Compare,
+                                       comparison_fct =  string.comparators[i])
         comparison.data[comparison.names[i]] <- household.name.combs2
 
       } else{
@@ -67,8 +70,10 @@ MakeComparisons <- function(RLdata,
         pasted.combo.values <- paste0(my.combs[, 1], ".", my.combs[, 2])
         if(verbose) print(utils::head(pasted.combo.values))
         unique.ones <- which(!duplicated(pasted.combo.values))
-        unique.comparisons <- get(string.comparators[i])(my.combs[unique.ones, 1], my.combs[unique.ones, 2])
-        mapping      <- match(pasted.combo.values, pasted.combo.values[unique.ones])
+        unique.comparisons <- get(string.comparators[i])(my.combs[unique.ones, 1],
+                                                         my.combs[unique.ones, 2])
+        mapping      <- match(pasted.combo.values,
+                              pasted.combo.values[unique.ones])
         comparison.data[comparison.names[i]] <- unique.comparisons[mapping]
         }
       }
@@ -78,7 +83,8 @@ MakeComparisons <- function(RLdata,
       comparison.data["true_match1"] <- NA
     } else{
       comparison.data["true_match1"] <-
-        GetPairwiseMatchesFromIDs(comparison.data[, c("min.id", "max.id")], unique.ids1)
+        GetPairwiseMatchesFromIDs(comparison.data[, c("min.id", "max.id")],
+                                  unique.ids1)
     }
     if(is.null(unique.ids2)){
       comparison.data["true_match2"] <- NA
@@ -140,7 +146,8 @@ RemoveDedups <- function(records,
 }
 
 
-
+#' @importFrom rlang .data
+#'
 #' @export
 RemoveDedupsBlock <- function(records,
                          block.variables, # don't include year
@@ -159,9 +166,11 @@ RemoveDedupsBlock <- function(records,
   # if records was read in using read_csv (i.e. is a tibble)
   # then we extract variables different than data frames
   if(tibble::is_tibble(records)){
-    x$blockid <- paste0(dplyr::pull(records, list.variable)[apply(x[1:2], 1, min)],
+    x$blockid <- paste0(dplyr::pull(records,
+                                    .data$list.variable)[apply(x[1:2], 1, min)],
                         "_",
-                        dplyr::pull(records, list.variable)[apply(x[1:2], 1, max)])
+                        dplyr::pull(records,
+                                    .data$list.variable)[apply(x[1:2], 1, max)])
   } else{
     x$blockid <- paste0(records[list.variable][apply(x[1:2], 1, min)],
                         "_",
