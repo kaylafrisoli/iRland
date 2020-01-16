@@ -131,8 +131,8 @@ ExtractDataByLocation <- function(County_DEDs,
       County_DEDs <- c(County_DEDs, "Kildare.Athy_East_Urban")
     }
     # which_files <- which(all_county_deds %in% County_DEDs)
-    which_files <- which(str_replace_all(all_county_deds, "[^[:alnum:]]", "") %in%
-                           str_replace_all(County_DEDs, "[^[:alnum:]]", ""))
+    which_files <- which(stringr::str_replace_all(all_county_deds, "[^[:alnum:]]", "") %in%
+                           stringr::str_replace_all(County_DEDs, "[^[:alnum:]]", ""))
 
     tbl1 = lapply(full_file_paths[which_files], LoadCleanRaw, assignID = c("County", "DED", "Year"))
     # for(i in 1:length(tbl1)){
