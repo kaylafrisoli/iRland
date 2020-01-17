@@ -264,6 +264,8 @@ SubsetByFunction <- function(data_to_subset, data_labelee, var, funct,
 
 # data_household is the data where we know we can find
 # the household of the candidate
+#' @importFrom rlang .data
+#'
 #' @export
 GetHousehold <- function(data_candidate, data_household=NULL){
 
@@ -273,7 +275,7 @@ GetHousehold <- function(data_candidate, data_household=NULL){
   }
 
   household <- data_household %>%
-    dplyr::filter(household_year == dplyr::pull(data_candidate, "household_year"))
+    dplyr::filter(.data$household_year == dplyr::pull(data_candidate, "household_year"))
 
   return(household)
 
