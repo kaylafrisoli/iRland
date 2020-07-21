@@ -1,18 +1,24 @@
+# for a given row of house.data
 #' @export
-GetHouseMatch <- function(house.data, comparison.data, rf.cutoff, rf.prob.name){
-  comparison.data.subset <- comparison.data[paste0(ticknock$household_year[comparison.data$min.id],
+GetHouseMatch <- function(house.data, original.data, comparison_data, rf.cutoff, rf.prob.name){
+  # for a given row of house.data, get the corresponding comparison_data rows
+  comparison_data.subset <- comparison_data[paste0(original.data[, "household_year"][comparison_data$min.id],
                                                    ".",
-                                                   ticknock$household_year[comparison.data$max.id]) ==
+                                                   original.data[, "household_year"][comparison_data$max.id]) ==
                                               as.character(house.data["min.max.house"]), ]
-  min.max <- c(comparison.data.subset$min.id,
-               comparison.data.subset$max.id)
-  rf.prob.name.id <- which(names(comparison.data.subset) %in% rf.prob.name)
-  ids.to.replace <- comparison.data.subset$max.id[comparison.data.subset[, rf.prob.name.id] > rf.cutoff]
-  replacement.ids <- comparison.data.subset$min.id[comparison.data.subset[, rf.prob.name.id] > rf.cutoff]
+  #  predicted_vals <- comparison_data.subset[, rf.prob.name.id]
+  # get all ids associated with these comparisons
+  min.max <- c(comparison_data.subset$min.id,
+               comparison_data.subset$max.id)
+  rf.prob.name.id <- which(names(comparison_data.subset) %in% rf.prob.name)
+  # which max ids are associated with a high probability?
+  ids.to.replace <- comparison_data.subset$max.id[comparison_data.subset[, rf.prob.name.id] > rf.cutoff]
+  # which min ids are associated with a high probability?
+  replacement.ids <- comparison_data.subset$min.id[comparison_data.subset[, rf.prob.name.id] > rf.cutoff]
   replacement.ids.full <- replacement.ids[match(min.max, ids.to.replace)]
   min.max[!is.na(replacement.ids.full)] <- replacement.ids.full[!is.na(replacement.ids.full)]
 
-  return(sum(comparison.data.subset[, rf.prob.name.id][comparison.data.subset[, rf.prob.name.id] > rf.cutoff])/
+  return(sum(comparison_data.subset[, rf.prob.name.id][comparison_data.subset[, rf.prob.name.id] > rf.cutoff], na.rm = TRUE)/
            length(unique(min.max)))
 }
 
