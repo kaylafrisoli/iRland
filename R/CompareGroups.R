@@ -5,7 +5,7 @@
 #' @export
 GetGroupLinkage <- function(house_data, comparison_data, cutoff, similarity_field){
   comparison_data_subset <- comparison_data %>%
-    dplyr::filter(min_max_house == pull(house_data, min.max.house))
+    dplyr::filter(.data$min_max_house == pull(house_data, min.max.house))
 
   A_size = length(unique(comparison_data_subset$reference))
   B_size = length(unique(comparison_data_subset$candidate))
