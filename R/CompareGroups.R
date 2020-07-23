@@ -1,27 +1,26 @@
-# for a given row of house.data
+# for a given row of house_data, where the pairwise data NEEDS to already be made
+# in comparison_data
 #' @export
-GetHouseMatch <- function(house.data, original.data, comparison_data, rf.cutoff, rf.prob.name){
-  # for a given row of house.data, get the corresponding comparison_data rows
-  comparison_data.subset <- comparison_data[paste0(original.data[, "household_year"][comparison_data$min.id],
-                                                   ".",
-                                                   original.data[, "household_year"][comparison_data$max.id]) ==
-                                              as.character(house.data["min.max.house"]), ]
-  #  predicted_vals <- comparison_data.subset[, rf.prob.name.id]
-  # get all ids associated with these comparisons
-  min.max <- c(comparison_data.subset$min.id,
-               comparison_data.subset$max.id)
-  rf.prob.name.id <- which(names(comparison_data.subset) %in% rf.prob.name)
-  # which max ids are associated with a high probability?
-  ids.to.replace <- comparison_data.subset$max.id[comparison_data.subset[, rf.prob.name.id] > rf.cutoff]
-  # which min ids are associated with a high probability?
-  replacement.ids <- comparison_data.subset$min.id[comparison_data.subset[, rf.prob.name.id] > rf.cutoff]
-  replacement.ids.full <- replacement.ids[match(min.max, ids.to.replace)]
-  min.max[!is.na(replacement.ids.full)] <- replacement.ids.full[!is.na(replacement.ids.full)]
+GetGroupLinkage <- function(house_data, comparison_data, cutoff, similarity_field){
+  comparison_data_subset <- comparison_data %>%
+    dplyr::filter(min_max_house == pull(house_data, min.max.house))
 
-  return(sum(comparison_data.subset[, rf.prob.name.id][comparison_data.subset[, rf.prob.name.id] > rf.cutoff], na.rm = TRUE)/
-           length(unique(min.max)))
+  A_size = length(unique(comparison_data_subset$reference))
+  B_size = length(unique(comparison_data_subset$candidate))
+
+  comparison_data_subset_cutoff <- comparison_data_subset %>%
+    dplyr::group_by(reference) %>%
+    dplyr::arrange(dplyr::desc(!!as.name(similarity_field))) %>%
+    dplyr::top_n(n = 1) %>%
+    dplyr::ungroup() %>%
+    pull(!!as.name(similarity_field)) %>%
+    .[. > cutoff]
+
+  M_size <- length(comparison_data_subset_cutoff)
+  Sim_sum <- sum(comparison_data_subset_cutoff, na.rm = TRUE)
+
+  return(Sim_sum / (A_size + B_size - M_size))
 }
-
 
 #' @export
 JacKay <- function(vec1, vec2){
@@ -46,4 +45,35 @@ AdjJacPreProc <- function(x){
   } else{
     return(x)
   }
+}
+
+
+
+# for a given row of house_data
+#' @export
+GetGroupLinkageOld <- function(house_data, original_data, comparison_data, cutoff, similarity_field){
+  # for a given row of house_data, get the corresponding comparison_data rows
+  # comparison_data_subset <- comparison_data[paste0(original_data[, "household_year"][comparison_data$min.id],
+  #                                                  ".",
+  #                                                  original_data[, "household_year"][comparison_data$max.id]) ==
+  #                                             as.character(house_data["min.max.house"]), ]
+  # house_data <- as.data.frame(house_data)
+  comparison_data_subset <- comparison_data %>%
+    dplyr::filter(min_max_house == pull(house_data, min.max.house))
+
+  #  predicted_vals <- dplyr::pull(ccomparison_data_subset, similarity_field.id)
+  # get all ids associated with these comparisons
+  min.max <- c(dplyr::pull(comparison_data_subset, min.id),
+               dplyr::pull(comparison_data_subset, max.id))
+  similarity_field_id <- which(names(comparison_data_subset) %in% similarity_field)
+  # which max ids are associated with a high probability?
+  ids.to.replace <- dplyr::pull(comparison_data_subset, max.id)[dplyr::pull(comparison_data_subset, similarity_field_id) > cutoff]
+  # which min ids are associated with a high probability?
+  replacement_ids <- dplyr::pull(comparison_data_subset, min.id)[dplyr::pull(comparison_data_subset, similarity_field_id) > cutoff]
+  replacement_ids_full <- replacement_ids[match(min.max, ids.to.replace)]
+  min.max[!is.na(replacement_ids_full)] <- replacement_ids_full[!is.na(replacement_ids_full)]
+
+  return(sum(dplyr::pull(comparison_data_subset,
+                         similarity_field_id)[dplyr::pull(comparison_data_subset, similarity_field_id) > cutoff], na.rm = TRUE)/
+           length(unique(min.max)))
 }
