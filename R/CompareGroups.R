@@ -52,7 +52,6 @@ AdjJacPreProc <- function(x){
 
 
 # for a given row of house_data
-#' @export
 GetGroupLinkageOld <- function(house_data, original_data, comparison_data, cutoff, similarity_field){
   # for a given row of house_data, get the corresponding comparison_data rows
   # comparison_data_subset <- comparison_data[paste0(original_data[, "household_year"][comparison_data$min.id],
