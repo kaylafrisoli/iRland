@@ -1,6 +1,7 @@
 # for a given row of house_data, where the pairwise data NEEDS to already be made
 # in comparison_data
-
+#' @importFrom rlang .data
+#'
 #' @export
 GetGroupLinkage <- function(house_data, comparison_data, cutoff, similarity_field){
   comparison_data_subset <- comparison_data %>%
@@ -11,11 +12,11 @@ GetGroupLinkage <- function(house_data, comparison_data, cutoff, similarity_fiel
 
   comparison_data_subset_cutoff <- comparison_data_subset %>%
     dplyr::group_by(reference) %>%
-    dplyr::arrange(dplyr::desc(!!as.name(similarity_field))) %>%
+    dplyr::arrange(dplyr::desc(.data[[similarity_field]])) %>%
     # dplyr::top_n(n = 1) %>%
     dplyr::slice(1) %>% # slice is faster and doesn't produce an error
     dplyr::ungroup() %>%
-    pull(!!as.name(similarity_field)) %>%
+    pull(.data[[similarity_field]]) %>%
     .[. > cutoff]
 
   M_size <- length(comparison_data_subset_cutoff)
